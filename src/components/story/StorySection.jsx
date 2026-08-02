@@ -1,5 +1,6 @@
 import { useReveal } from '../../animations/reveal';
 import { business } from '../../data/business';
+import { assetPath } from '../../utils/assetPath';
 import { ArrowRight } from 'lucide-react';
 
 function StorySection() {
@@ -9,8 +10,8 @@ function StorySection() {
     <section className="story-section section" id="story">
       <div className="story-card" ref={revealRef}>
         <div className="story-visual">
-          <img src="/assets/shop/shop-interior.png" alt="The milkshake shop interior" loading="lazy" />
-          <img src="/assets/shop/preparation.png" alt="Fresh shake preparation" loading="lazy" />
+          <img src={assetPath('/assets/shop/shop-interior.png')} alt="The milkshake shop interior" loading="lazy" />
+          <img src={assetPath('/assets/shop/preparation.png')} alt="Fresh shake preparation" loading="lazy" />
         </div>
         <div className="story-copy">
           <p className="eyebrow">Our story</p>

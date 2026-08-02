@@ -1,4 +1,5 @@
 import { useReveal } from '../../animations/reveal';
+import { assetPath } from '../../utils/assetPath';
 
 function IngredientsSection() {
   const revealRef = useReveal();
@@ -7,12 +8,12 @@ function IngredientsSection() {
     <section className="section ingredients-section" ref={revealRef}>
       <div className="ingredients-shell">
         <div className="ingredient-orb">
-          <img src="/assets/ingredients/chocolate-piece.png" alt="" loading="lazy" />
-          <img src="/assets/ingredients/strawberry.png" alt="" loading="lazy" />
-          <img src="/assets/ingredients/mango-piece.png" alt="" loading="lazy" />
-          <img src="/assets/ingredients/oreo-cookie.png" alt="" loading="lazy" />
-          <img src="/assets/ingredients/mint-leaf.png" alt="" loading="lazy" />
-          <img src="/assets/ingredients/ice-cube.png" alt="" loading="lazy" />
+          <img src={assetPath('/assets/ingredients/chocolate-piece.png')} alt="" loading="lazy" />
+          <img src={assetPath('/assets/ingredients/strawberry.png')} alt="" loading="lazy" />
+          <img src={assetPath('/assets/ingredients/mango-piece.png')} alt="" loading="lazy" />
+          <img src={assetPath('/assets/ingredients/oreo-cookie.png')} alt="" loading="lazy" />
+          <img src={assetPath('/assets/ingredients/mint-leaf.png')} alt="" loading="lazy" />
+          <img src={assetPath('/assets/ingredients/ice-cube.png')} alt="" loading="lazy" />
         </div>
         <div className="ingredients-copy">
           <p className="eyebrow">Quality ingredients</p>

@@ -1,3 +1,5 @@
+import { assetPath } from '../utils/assetPath';
+
 export const flavours = [
   {
     id: 'chocolate',
@@ -6,19 +8,19 @@ export const flavours = [
     description:
       'A rich, creamy chocolate milkshake finished with a glossy cocoa swirl and whipped cream.',
     price: 'Rs 850',
-    image: '/assets/shakes/chocolate.png',
-    video: '/assets/shakes/chocolatevideo.mp4',
+    image: assetPath('/assets/shakes/chocolate.png'),
+    video: assetPath('/assets/shakes/chocolatevideo.mp4'),
     videoBackground: true,
-    splash: '/assets/splashes/chocolate-splash.png',
+    splash: assetPath('/assets/splashes/chocolate-splash.png'),
     ingredients: [
       {
-        image: '/assets/ingredients/chocolate-piece.png',
+        image: assetPath('/assets/ingredients/chocolate-piece.png'),
         alt: 'Chocolate shavings',
         className: 'ingredient chocolate',
         style: { left: '12%', top: '14%' },
       },
       {
-        image: '/assets/ingredients/ice-cube.png',
+        image: assetPath('/assets/ingredients/ice-cube.png'),
         alt: 'Iced cubes',
         className: 'ingredient cube',
         style: { right: '12%', top: '16%' },
@@ -35,18 +37,18 @@ export const flavours = [
     description:
       'Fresh strawberry notes and a silky finish make this shake feel like summer in a cup.',
     price: 'Rs 895',
-    image: '/assets/shakes/strawberry.png',
-    video: '/assets/shakes/strawberryvideo.webm',
-    splash: '/assets/splashes/strawberry-splash.png',
+    image: assetPath('/assets/shakes/strawberry.png'),
+    video: assetPath('/assets/shakes/strawberryvideo.webm'),
+    splash: assetPath('/assets/splashes/strawberry-splash.png'),
     ingredients: [
       {
-        image: '/assets/ingredients/strawberry.png',
+        image: assetPath('/assets/ingredients/strawberry.png'),
         alt: 'Fresh strawberry garnish',
         className: 'ingredient strawberry',
         style: { left: '10%', top: '18%' },
       },
       {
-        image: '/assets/ingredients/ice-cube.png',
+        image: assetPath('/assets/ingredients/ice-cube.png'),
         alt: 'Ice cubes',
         className: 'ingredient cube',
         style: { right: '14%', top: '20%' },
@@ -63,17 +65,17 @@ export const flavours = [
     description:
       'A mellow vanilla shake with a creamy body and a polished, café-style finish.',
     price: 'Rs 790',
-    image: '/assets/shakes/vanilla.png',
-    splash: '/assets/splashes/milk-splash.png',
+    image: assetPath('/assets/shakes/vanilla.png'),
+    splash: assetPath('/assets/splashes/milk-splash.png'),
     ingredients: [
       {
-        image: '/assets/ingredients/ice-cube.png',
+        image: assetPath('/assets/ingredients/ice-cube.png'),
         alt: 'Ice cube garnish',
         className: 'ingredient cube',
         style: { left: '10%', top: '16%' },
       },
       {
-        image: '/assets/ingredients/mint-leaf.png',
+        image: assetPath('/assets/ingredients/mint-leaf.png'),
         alt: 'Mint leaf',
         className: 'ingredient mint',
         style: { right: '9%', top: '12%' },
@@ -90,17 +92,17 @@ export const flavours = [
     description:
       'Bright mint and smooth dairy come together in a brisk, garden-fresh shake.',
     price: 'Rs 825',
-    image: '/assets/shakes/mint.png',
-    splash: '/assets/splashes/milk-splash.png',
+    image: assetPath('/assets/shakes/mint.png'),
+    splash: assetPath('/assets/splashes/milk-splash.png'),
     ingredients: [
       {
-        image: '/assets/ingredients/mint-leaf.png',
+        image: assetPath('/assets/ingredients/mint-leaf.png'),
         alt: 'Mint leaf garnish',
         className: 'ingredient mint',
         style: { left: '12%', top: '13%' },
       },
       {
-        image: '/assets/ingredients/ice-cube.png',
+        image: assetPath('/assets/ingredients/ice-cube.png'),
         alt: 'Cooling ice cubes',
         className: 'ingredient cube',
         style: { right: '12%', top: '17%' },
@@ -117,17 +119,17 @@ export const flavours = [
     description:
       'Juicy mango and a swirl of cream create a lush, sunlit treat with a bright finish.',
     price: 'Rs 880',
-    image: '/assets/shakes/mango.png',
-    splash: '/assets/splashes/caramel-ribbon.png',
+    image: assetPath('/assets/shakes/mango.png'),
+    splash: assetPath('/assets/splashes/caramel-ribbon.png'),
     ingredients: [
       {
-        image: '/assets/ingredients/mango-piece.png',
+        image: assetPath('/assets/ingredients/mango-piece.png'),
         alt: 'Mango slice',
         className: 'ingredient mango',
         style: { left: '10%', top: '16%' },
       },
       {
-        image: '/assets/ingredients/ice-cube.png',
+        image: assetPath('/assets/ingredients/ice-cube.png'),
         alt: 'Ice cube accent',
         className: 'ingredient cube',
         style: { right: '10%', top: '15%' },
@@ -144,17 +146,17 @@ export const flavours = [
     description:
       'A playful mix of cookie crumble and velvety cream with a classic finish.',
     price: 'Rs 865',
-    image: '/assets/shakes/oreo.png',
-    splash: '/assets/splashes/chocolate-splash.png',
+    image: assetPath('/assets/shakes/oreo.png'),
+    splash: assetPath('/assets/splashes/chocolate-splash.png'),
     ingredients: [
       {
-        image: '/assets/ingredients/oreo-cookie.png',
+        image: assetPath('/assets/ingredients/oreo-cookie.png'),
         alt: 'Oreo cookie',
         className: 'ingredient oreo',
         style: { left: '10%', top: '16%' },
       },
       {
-        image: '/assets/ingredients/chocolate-piece.png',
+        image: assetPath('/assets/ingredients/chocolate-piece.png'),
         alt: 'Chocolate accent',
         className: 'ingredient chocolate',
         style: { right: '12%', top: '14%' },

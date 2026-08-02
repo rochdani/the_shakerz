@@ -1,3 +1,5 @@
+import { assetPath } from '../utils/assetPath';
+
 export const products = [
   {
     id: 'signature',
@@ -5,7 +7,7 @@ export const products = [
     description: 'A sweet swirl of vanilla bean and caramel ribbon.',
     price: 'Rs 1,050',
     flavour: 'Vanilla',
-    image: '/assets/shakes/vanilla.png',
+    image: assetPath('/assets/shakes/vanilla.png'),
   },
   {
     id: 'berry-spark',
@@ -13,7 +15,7 @@ export const products = [
     description: 'Fresh strawberry and bright cream with a candy finish.',
     price: 'Rs 1,120',
     flavour: 'Strawberry',
-    image: '/assets/shakes/strawberry.png',
+    image: assetPath('/assets/shakes/strawberry.png'),
   },
   {
     id: 'dark-velvet',
@@ -21,7 +23,7 @@ export const products = [
     description: 'Deep chocolate and cocoa notes with a premium finish.',
     price: 'Rs 1,090',
     flavour: 'Chocolate',
-    image: '/assets/shakes/chocolate.png',
+    image: assetPath('/assets/shakes/chocolate.png'),
   },
   {
     id: 'mint-breeze',
@@ -29,7 +31,7 @@ export const products = [
     description: 'Cool mint folded into silky cream with a refreshing finish.',
     price: 'Rs 1,080',
     flavour: 'Mint',
-    image: '/assets/shakes/mint.png',
+    image: assetPath('/assets/shakes/mint.png'),
   },
   {
     id: 'mango-glow',
@@ -37,7 +39,7 @@ export const products = [
     description: 'Juicy tropical mango blended smooth with rich cream.',
     price: 'Rs 1,140',
     flavour: 'Mango',
-    image: '/assets/shakes/mango.png',
+    image: assetPath('/assets/shakes/mango.png'),
   },
   {
     id: 'cookie-crush',
@@ -45,6 +47,6 @@ export const products = [
     description: 'Crunchy cookie crumble and velvety vanilla in every sip.',
     price: 'Rs 1,160',
     flavour: 'Oreo',
-    image: '/assets/shakes/oreo.png',
+    image: assetPath('/assets/shakes/oreo.png'),
   },
 ];
