@@ -1,0 +1,90 @@
+.flavour-spiral-preloader {
+  --loader-orange: #f07f25;
+  --loader-brown: #572e0d;
+  --loader-cream: #fff4cb;
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 43%, rgba(240, 127, 37, 0.14), transparent 38%),
+    var(--loader-cream);
+  clip-path: inset(0);
+  isolation: isolate;
+}
+
+.flavour-spiral-preloader__glow {
+  position: absolute;
+  width: min(80vmin, 42rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240, 127, 37, 0.2), rgba(255, 244, 203, 0.14) 45%, transparent 70%);
+  filter: blur(12px);
+}
+
+.flavour-spiral-preloader__scene {
+  position: relative;
+  z-index: 2;
+  width: clamp(190px, 26vw, 330px);
+  height: auto;
+  max-height: min(88vh, 88dvh);
+  overflow: visible;
+  will-change: transform, opacity;
+}
+
+.spiral-cup-body,
+.spiral-cup-rim {
+  backdrop-filter: blur(2px);
+}
+
+.spiral-ribbon,
+.spiral-liquid-layer,
+.spiral-liquid-strawberry,
+.spiral-strawberry,
+.spiral-straw,
+.spiral-logo,
+.spiral-logo-glow,
+.spiral-orbit-drop {
+  will-change: transform, opacity;
+}
+
+.flavour-spiral-preloader__reveal-wave {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: -72vmax;
+  width: 180vmax;
+  height: 180vmax;
+  margin-left: -90vmax;
+  border-radius: 48% 52% 0 0 / 18% 18% 0 0;
+  background:
+    radial-gradient(circle at 50% 12%, #fff4cb 0 15%, #f6a35f 42%, var(--loader-orange) 100%);
+  box-shadow: 0 -20px 55px rgba(87, 46, 13, 0.22);
+  transform: scale(0);
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+@media (max-width: 600px) {
+  .flavour-spiral-preloader__scene {
+    width: clamp(205px, 62vw, 270px);
+    max-height: min(84vh, 84dvh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flavour-spiral-preloader__scene {
+    width: clamp(205px, 54vw, 290px);
+  }
+
+  .preloader-ribbons,
+  .spiral-drops,
+  .flavour-spiral-preloader__reveal-wave {
+    display: none;
+  }
+}

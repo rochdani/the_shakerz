@@ -8,10 +8,12 @@ import ReviewSection from './components/reviews/ReviewSection';
 import FaqSection from './components/faq/FaqSection';
 import LocationSection from './components/layout/LocationSection';
 import SiteFooter from './components/layout/SiteFooter';
+import FlavourSpiralPreloader from './components/layout/FlavourSpiralPreloader';
 
 function App() {
   return (
     <>
+      <FlavourSpiralPreloader />
       <SiteHeader />
       <main>
         <FlavourHero flavours={flavours} />
