@@ -27,14 +27,58 @@
   filter: blur(12px);
 }
 
-.flavour-spiral-preloader__scene {
+.vortex-loader-content {
   position: relative;
   z-index: 2;
   width: clamp(190px, 26vw, 330px);
+  display: grid;
+  justify-items: center;
+}
+
+.flavour-spiral-preloader__scene {
+  width: 100%;
   height: auto;
   max-height: min(88vh, 88dvh);
   overflow: visible;
+  opacity: 0;
   will-change: transform, opacity;
+}
+
+.vortex-progress {
+  width: min(78%, 15rem);
+  margin-top: clamp(-1rem, -1.6vw, -0.45rem);
+  display: grid;
+  gap: 0.48rem;
+}
+
+.vortex-progress__label {
+  color: var(--loader-brown);
+  font-size: clamp(0.62rem, 1.3vw, 0.72rem);
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.vortex-progress__track {
+  height: 0.38rem;
+  overflow: hidden;
+  border: 1px solid rgba(87, 46, 13, 0.16);
+  border-radius: 999px;
+  background: rgba(87, 46, 13, 0.1);
+  box-shadow: inset 0 1px 2px rgba(87, 46, 13, 0.1);
+}
+
+.vortex-progress__fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--loader-brown), var(--loader-orange));
+  box-shadow: 0 0 12px rgba(240, 127, 37, 0.38);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
 }
 
 .spiral-cup-body,
@@ -42,14 +86,13 @@
   backdrop-filter: blur(2px);
 }
 
-.spiral-ribbon,
-.spiral-liquid-layer,
-.spiral-liquid-strawberry,
-.spiral-strawberry,
-.spiral-straw,
+.vortex-cup-liquid,
+.spiral-chocolate-swirl,
+.spiral-cookie-layer,
+.spiral-condensation,
+.spiral-lid,
 .spiral-logo,
-.spiral-logo-glow,
-.spiral-orbit-drop {
+.spiral-logo-glow {
   will-change: transform, opacity;
 }
 
@@ -63,7 +106,7 @@
   margin-left: -90vmax;
   border-radius: 48% 52% 0 0 / 18% 18% 0 0;
   background:
-    radial-gradient(circle at 50% 12%, #fff4cb 0 15%, #f6a35f 42%, var(--loader-orange) 100%);
+    radial-gradient(circle at 50% 12%, #572e0d 0 20%, #8a4b25 38%, var(--loader-orange) 70%, #572e0d 100%);
   box-shadow: 0 -20px 55px rgba(87, 46, 13, 0.22);
   transform: scale(0);
   transform-origin: center bottom;
@@ -71,19 +114,20 @@
 }
 
 @media (max-width: 600px) {
-  .flavour-spiral-preloader__scene {
+  .vortex-loader-content {
     width: clamp(205px, 62vw, 270px);
+  }
+
+  .flavour-spiral-preloader__scene {
     max-height: min(84vh, 84dvh);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flavour-spiral-preloader__scene {
+  .vortex-loader-content {
     width: clamp(205px, 54vw, 290px);
   }
 
-  .preloader-ribbons,
-  .spiral-drops,
   .flavour-spiral-preloader__reveal-wave {
     display: none;
   }

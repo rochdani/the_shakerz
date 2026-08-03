@@ -8,12 +8,12 @@ import ReviewSection from './components/reviews/ReviewSection';
 import FaqSection from './components/faq/FaqSection';
 import LocationSection from './components/layout/LocationSection';
 import SiteFooter from './components/layout/SiteFooter';
-import FlavourSpiralPreloader from './components/layout/FlavourSpiralPreloader';
+import ChocolateVortexPreloader from './components/layout/ChocolateVortexPreloader';
 
 function App() {
   return (
     <>
-      <FlavourSpiralPreloader />
+      <ChocolateVortexPreloader />
       <SiteHeader />
       <main>
         <FlavourHero flavours={flavours} />

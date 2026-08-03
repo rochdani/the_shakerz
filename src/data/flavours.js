@@ -9,8 +9,6 @@ export const flavours = [
       'A rich, creamy chocolate milkshake finished with a glossy cocoa swirl and whipped cream.',
     price: 'Rs 850',
     image: assetPath('/assets/shakes/chocolate.png'),
-    video: assetPath('/assets/shakes/chocolatevideo.mp4'),
-    videoBackground: true,
     splash: assetPath('/assets/splashes/chocolate-splash.png'),
     ingredients: [
       {
@@ -38,7 +36,6 @@ export const flavours = [
       'Fresh strawberry notes and a silky finish make this shake feel like summer in a cup.',
     price: 'Rs 895',
     image: assetPath('/assets/shakes/strawberry.png'),
-    video: assetPath('/assets/shakes/strawberryvideo.webm'),
     splash: assetPath('/assets/splashes/strawberry-splash.png'),
     ingredients: [
       {
