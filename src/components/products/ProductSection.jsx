@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { products } from '../../data/products';
 import ProductCard from './ProductCard';
 import { createStaggerVariants, useReducedMotion } from '../../animations/reveal';
+import SectionWave from '../shared/SectionWave';
 
 function ProductSection() {
   const railRef = useRef(null);
@@ -20,16 +21,15 @@ function ProductSection() {
   };
 
   return (
-    <section className="section section-cream" id="menu">
-      <div className="products-showcase">
+    <section className="section section-band section-band-secondary product-section-redesign" id="menu">
+      <div className="section__content">
+        <div className="products-showcase">
         <div className="products-heading">
           <div>
             <p className="eyebrow">Explore the menu</p>
-            <h2>Discover your<br />delicious taste.</h2>
+            <h2>Find your flavour.</h2>
           </div>
-          <p>
-            From creamy classics to bright fruit blends, swipe through and find the shake made for you.
-          </p>
+          <p>Creamy, dreamy and made just for you.</p>
         </div>
 
         <div className="products-rail-wrap">
@@ -64,7 +64,12 @@ function ProductSection() {
             <ChevronRight size={20} />
           </button>
         </div>
+        <div className="carousel-dots" aria-hidden="true">
+          {products.map((product, index) => <i className={index === 0 ? 'active' : ''} key={product.id} />)}
+        </div>
+        </div>
       </div>
+      <SectionWave position="bottom" fill="var(--shakerz-primary-cream)" variant="asymmetric" />
     </section>
   );
 }

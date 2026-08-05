@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 58" role="img" aria-labelledby="title">
+  <title id="title">The Shakerz map marker</title>
+  <path d="M24 1.5C11.6 1.5 2 11.1 2 23.5c0 15.7 17.3 31 20.9 33.9a1.8 1.8 0 0 0 2.2 0C28.7 54.5 46 39.2 46 23.5 46 11.1 36.4 1.5 24 1.5Z" fill="#F07F25" stroke="#572E0D" stroke-width="2"/>
+  <circle cx="24" cy="23" r="14" fill="#fff"/>
+  <path d="M17.5 17.5h13l-1.4 14h-10.2l-1.4-14Zm2.3-3h8.4l1.3 3h-11l1.3-3Zm3.1-4h2.2v4h-2.2v-4Z" fill="#F07F25" stroke="#572E0D" stroke-linejoin="round" stroke-width="1.2"/>
+</svg>

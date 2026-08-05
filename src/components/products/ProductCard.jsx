@@ -13,10 +13,10 @@ function ProductCard({ product }) {
         </div>
         <h3>{product.name}</h3>
         <p>{product.description}</p>
-        <button type="button" className="product-order-button">
-          Buy now
+        <a href="#contact" className="product-order-button">
+          Order now
           <ArrowRight size={16} />
-        </button>
+        </a>
       </div>
     </article>
   );

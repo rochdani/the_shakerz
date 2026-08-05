@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { createStaggerVariants, useReducedMotion } from '../../animations/reveal';
 import { reviews } from '../../data/reviews';
+import SectionWave from '../shared/SectionWave';
 
 function ReviewSection() {
   const railRef = useRef(null);
@@ -19,13 +20,15 @@ function ReviewSection() {
   };
 
   return (
-    <section className="section reviews-section" id="reviews">
+    <section className="section reviews-section section-band section-band-secondary" id="reviews">
+      <SectionWave position="top" fill="var(--shakerz-secondary-cream)" variant="wide" />
+      <div className="section__content">
       <span className="review-doodle review-doodle-star" aria-hidden="true">✦</span>
       <span className="review-doodle review-doodle-wave" aria-hidden="true">〜</span>
       <span className="review-doodle review-doodle-spark" aria-hidden="true">✣</span>
       <div className="section-heading center">
         <p className="eyebrow">Sweet words from our guests</p>
-        <h2>Explore what makes every sip special.</h2>
+        <h2>Loved one sip at a time.</h2>
         <p className="section-description">Real reviews from people who came for a shake and stayed for the experience.</p>
       </div>
       <motion.div
@@ -41,7 +44,7 @@ function ReviewSection() {
             className="review-slide"
             key={review.id}
             variants={variants.item}
-            style={{ '--card-tilt': `${[-2.2, 0.6, 2.2][reviewIndex % 3]}deg` }}
+            style={{ '--card-tilt': `${[-1.2, 0.4, 1.2][reviewIndex % 3]}deg` }}
           >
             <article className="review-card">
               <span className="review-quote" aria-hidden="true">“</span>
@@ -70,6 +73,8 @@ function ReviewSection() {
           <ChevronRight size={18} />
         </button>
       </div>
+      </div>
+      <SectionWave position="bottom" fill="var(--shakerz-primary-cream)" variant="soft" />
     </section>
   );
 }

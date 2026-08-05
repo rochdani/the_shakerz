@@ -24,6 +24,7 @@ function ChocolateVortexPreloader() {
       finishedRef.current = true;
 
       document.body.style.overflow = previousOverflow;
+      window.dispatchEvent(new CustomEvent('shakerz:preloader-complete'));
       setIsVisible(false);
     };
 

@@ -1,270 +1,361 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
-import { useReducedMotion } from '../../animations/reveal';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Heart,
+  Leaf,
+  Smile,
+  Sparkles,
+} from 'lucide-react';
 import { gsap } from 'gsap';
+import { useReducedMotion } from '../../animations/reveal';
+import { assetPath } from '../../utils/assetPath';
+import SectionWave from '../shared/SectionWave';
 
-const AUTOPLAY_DELAY = 4200;
+const VIDEO_PATH = assetPath('/assets/shakes/newvideo-silent.mp4');
+const VIDEO_FALLBACK_PATH = assetPath('/assets/shakes/newvideo.mp4');
+const POSTER_PATH = assetPath('/assets/images/milkshake-video-poster.webp');
+const REPLAY_DELAY = 10000;
+
+const benefits = [
+  { label: 'Real fruits', Icon: Leaf },
+  { label: 'Rich & creamy', Icon: Sparkles },
+  { label: 'Instant joy', Icon: Smile },
+];
 
 function FlavourHero({ flavours }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [videoAvailable, setVideoAvailable] = useState(true);
   const reducedMotion = useReducedMotion();
   const heroRef = useRef(null);
-  const contentRef = useRef(null);
-  const imageRef = useRef(null);
-  const autoplayTimerRef = useRef(null);
-  const isTransitioningRef = useRef(false);
-  const isHoveredRef = useRef(false);
-  const activeIndexRef = useRef(0);
+  const videoRef = useRef(null);
+  const replayTimerRef = useRef(null);
+  const heroVisibleRef = useRef(true);
+  const videoEndedRef = useRef(false);
+  const playbackRequestedRef = useRef(false);
+  const entrancePlayedRef = useRef(false);
 
-  const activeFlavour = useMemo(() => flavours[activeIndex], [activeIndex, flavours]);
+  const activeFlavour = flavours[activeIndex];
+
+  const playVideo = useCallback((allowInitialStart = false) => {
+    const video = videoRef.current;
+    if (
+      !video
+      || reducedMotion
+      || document.hidden
+      || (!allowInitialStart && !heroVisibleRef.current)
+    ) return;
+
+    playbackRequestedRef.current = true;
+    if (replayTimerRef.current) {
+      window.clearTimeout(replayTimerRef.current);
+      replayTimerRef.current = null;
+    }
+
+    videoEndedRef.current = false;
+    video.currentTime = 0;
+    video.play().catch(() => {
+      // Autoplay can be blocked; the poster remains as the visual fallback.
+    });
+  }, [reducedMotion]);
+
+  const scheduleReplay = useCallback(() => {
+    if (reducedMotion || document.hidden || !heroVisibleRef.current) return;
+
+    if (replayTimerRef.current) window.clearTimeout(replayTimerRef.current);
+    replayTimerRef.current = window.setTimeout(() => {
+      replayTimerRef.current = null;
+      if (!document.hidden && heroVisibleRef.current) playVideo();
+    }, REPLAY_DELAY);
+  }, [playVideo, reducedMotion]);
+
+  const handleVideoEnded = useCallback(() => {
+    videoEndedRef.current = true;
+    scheduleReplay();
+  }, [scheduleReplay]);
 
   useEffect(() => {
-    if (!heroRef.current || reducedMotion) {
-      return undefined;
-    }
-
-    const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    timeline.fromTo(
-      contentRef.current,
-      { opacity: 0, y: 24 },
-      { opacity: 1, y: 0, duration: 0.7 },
-    );
-    timeline.fromTo(
-      imageRef.current,
-      { opacity: 0, scale: 0.86, y: 34, rotate: -3 },
-      { opacity: 1, scale: 1, y: 0, rotate: 0, duration: 0.9 },
-      '-=0.35',
-    );
-    return () => timeline.kill();
-  }, [activeIndex, reducedMotion]);
-
-  useEffect(() => {
-    if (!heroRef.current) {
-      return undefined;
-    }
-
-    heroRef.current.style.setProperty('--hero-accent', activeFlavour.secondary);
-    heroRef.current.style.setProperty('--hero-bg', activeFlavour.background);
-    heroRef.current.style.setProperty('--hero-panel', activeFlavour.secondary);
-    heroRef.current.style.setProperty('--hero-text', activeFlavour.textColor);
-
-    return undefined;
-  }, [activeFlavour]);
-
-  const clearAutoplay = () => {
-    if (autoplayTimerRef.current) {
-      window.clearTimeout(autoplayTimerRef.current);
-      autoplayTimerRef.current = null;
-    }
-  };
-
-  const scheduleAutoplay = (fromIndex) => {
-    clearAutoplay();
-    if (reducedMotion || flavours.length <= 1) {
-      return;
-    }
-
-    const delay = flavours[fromIndex]?.video ? 7000 : AUTOPLAY_DELAY;
-
-    autoplayTimerRef.current = window.setTimeout(() => {
-      if (isHoveredRef.current) {
-        return;
-      }
-      goToIndex((fromIndex + 1) % flavours.length);
-    }, delay);
-  };
-
-  const goToIndex = (nextIndex) => {
-    if (isTransitioningRef.current || nextIndex === activeIndexRef.current) {
-      return;
-    }
-
-    clearAutoplay();
-    isTransitioningRef.current = true;
-
-    const finish = () => {
-      activeIndexRef.current = nextIndex;
-      setActiveIndex(nextIndex);
-      isTransitioningRef.current = false;
-      scheduleAutoplay(nextIndex);
-    };
+    const hero = heroRef.current;
+    if (!hero) return undefined;
 
     if (reducedMotion) {
-      finish();
-      return;
+      gsap.set(hero.querySelectorAll('[data-hero-reveal]'), { clearProps: 'all' });
+      return undefined;
     }
 
-    const timeline = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
-    timeline.to([contentRef.current, imageRef.current], {
-      opacity: 0,
-      y: 22,
-      scale: 0.96,
-      duration: 0.34,
-      stagger: 0.03,
-    });
-    timeline.call(finish);
-    timeline.fromTo(
-      [contentRef.current, imageRef.current],
-      { opacity: 0, y: 30, scale: 0.94 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.62, stagger: 0.06 },
-    );
-  };
+    let timeline;
 
-  const shiftFlavour = (direction) => {
-    const nextIndex = direction === 'next'
-      ? (activeIndexRef.current + 1) % flavours.length
-      : (activeIndexRef.current - 1 + flavours.length) % flavours.length;
+    const startEntrance = () => {
+      if (entrancePlayedRef.current) return;
+      entrancePlayedRef.current = true;
+      playVideo(true);
 
-    goToIndex(nextIndex);
-  };
+      const siteHeader = document.querySelector('.site-header');
+      const context = gsap.context(() => {
+        timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        timeline
+          .fromTo(siteHeader, { autoAlpha: 0, y: -14 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.45,
+          }, 0)
+          .fromTo('.hero-new-eyebrow', { autoAlpha: 0, y: 14 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.45,
+          }, 0.08)
+          .fromTo('.hero-new-heading', { autoAlpha: 0, y: 32 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.65,
+            ease: 'expo.out',
+          }, 0.16)
+          .fromTo('.hero-new-description, .hero-new-actions', { autoAlpha: 0, y: 20 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.08,
+          }, 0.38)
+          .fromTo('.hero-product-stage', { autoAlpha: 0, scale: 0.94 }, {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.75,
+            ease: 'expo.out',
+          }, 0.24)
+          .fromTo('.hero-orbit-path', { strokeDasharray: 900, strokeDashoffset: 900 }, {
+            strokeDashoffset: 0,
+            duration: 0.9,
+            stagger: 0.08,
+            ease: 'sine.inOut',
+          }, 0.42)
+          .fromTo('.hero-product-badge', { autoAlpha: 0, scale: 0.8 }, {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.42,
+            stagger: 0.09,
+          }, 0.68)
+          .fromTo('.hero-benefits', { autoAlpha: 0, y: 22 }, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.55,
+          }, 0.72)
+          .fromTo('.hero-wave', { yPercent: 25 }, {
+            yPercent: 0,
+            duration: 0.65,
+            ease: 'sine.out',
+          }, 0.72);
+
+        gsap.to('.hero-orbits-back', {
+          rotate: 360,
+          transformOrigin: 'center',
+          duration: 32,
+          ease: 'none',
+          repeat: -1,
+        });
+      }, hero);
+
+      return context;
+    };
+
+    let context;
+    const onPreloaderComplete = () => {
+      window.clearTimeout(entranceFallbackTimer);
+      context = startEntrance();
+    };
+
+    let entranceFallbackTimer;
+    let entranceFrame;
+    if (document.querySelector('.flavour-spiral-preloader')) {
+      window.addEventListener('shakerz:preloader-complete', onPreloaderComplete, { once: true });
+      // Strict Mode, HMR, or a safety-timeout handoff must never leave the
+      // hero waiting on an event that has already fired.
+      entranceFallbackTimer = window.setTimeout(() => {
+        context = startEntrance();
+      }, 5200);
+    } else {
+      // Defer direct starts so React Strict Mode can discard its probe effect
+      // before the one real entrance timeline is created.
+      entranceFrame = window.requestAnimationFrame(() => {
+        context = startEntrance();
+      });
+    }
+
+    return () => {
+      window.clearTimeout(entranceFallbackTimer);
+      window.cancelAnimationFrame(entranceFrame);
+      window.removeEventListener('shakerz:preloader-complete', onPreloaderComplete);
+      timeline?.kill();
+      context?.revert();
+    };
+  }, [playVideo, reducedMotion]);
 
   useEffect(() => {
-    scheduleAutoplay(activeIndexRef.current);
-    return () => clearAutoplay();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reducedMotion, flavours.length]);
+    const hero = heroRef.current;
+    if (!hero || reducedMotion || !videoAvailable) return undefined;
 
-  const handleHoverStart = () => {
-    isHoveredRef.current = true;
-    clearAutoplay();
-  };
+    const observer = new IntersectionObserver(([entry]) => {
+      heroVisibleRef.current = entry.isIntersecting;
 
-  const handleHoverEnd = () => {
-    isHoveredRef.current = false;
-    scheduleAutoplay(activeIndexRef.current);
-  };
+      if (!entry.isIntersecting) {
+        videoRef.current?.pause();
+        if (replayTimerRef.current) {
+          window.clearTimeout(replayTimerRef.current);
+          replayTimerRef.current = null;
+        }
+      } else if (videoEndedRef.current) {
+        scheduleReplay();
+      } else if (videoRef.current?.paused && videoRef.current.currentTime > 0) {
+        videoRef.current.play().catch(() => {
+          // The current video frame remains visible when playback is blocked.
+        });
+      }
+    }, { threshold: 0.15 });
 
-  const getOrbitPosition = (index) => {
-    const offset = (index - activeIndex + flavours.length) % flavours.length;
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        videoRef.current?.pause();
+        if (replayTimerRef.current) {
+          window.clearTimeout(replayTimerRef.current);
+          replayTimerRef.current = null;
+        }
+      } else if (heroVisibleRef.current) {
+        if (videoEndedRef.current) {
+          scheduleReplay();
+        } else if (videoRef.current?.paused && videoRef.current.currentTime > 0) {
+          videoRef.current.play().catch(() => {
+            // Preserve the current frame if playback cannot resume.
+          });
+        }
+      }
+    };
 
-    if (offset === 0) return 'active';
-    if (offset === 1) return 'next';
-    if (offset === 2) return 'far-next';
-    if (offset === flavours.length - 1) return 'previous';
-    if (offset === flavours.length - 2) return 'far-previous';
-    return 'back';
+    observer.observe(hero);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (replayTimerRef.current) window.clearTimeout(replayTimerRef.current);
+    };
+  }, [reducedMotion, scheduleReplay, videoAvailable]);
+
+  const shiftFlavour = (direction) => {
+    setActiveIndex((current) => (
+      direction === 'next'
+        ? (current + 1) % flavours.length
+        : (current - 1 + flavours.length) % flavours.length
+    ));
   };
 
   return (
-    <section
-      className="hero-section"
-      id="home"
-      ref={heroRef}
-      onMouseEnter={handleHoverStart}
-      onMouseLeave={handleHoverEnd}
-    >
-      {activeFlavour.videoBackground && activeFlavour.video ? (
-        <div className="hero-video-background" aria-hidden="true">
-          <video
-            key={`background-${activeFlavour.id}-${activeIndex}`}
-            src={activeFlavour.video}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-          />
-          <span />
-        </div>
-      ) : null}
-
-      <div className="hero-content">
-        <div className="hero-copy" ref={contentRef}>
-          <p className="eyebrow hero-eyebrow">
-            <Sparkles size={15} /> {activeFlavour.tagline}
+    <section className="hero-section hero-redesign" id="home" ref={heroRef}>
+      <div className="hero-content hero-new-layout">
+        <div className="hero-copy hero-new-copy">
+          <p className="hero-new-eyebrow" data-hero-reveal>
+            <span />
+            Made with love
+            <Heart size={18} strokeWidth={1.8} />
           </p>
-          <h1>Taste Joy in<br />Every Sip.</h1>
-          <p className="hero-description">{activeFlavour.description}</p>
-          <div className="hero-actions">
+          <h1 className="hero-new-heading" data-hero-reveal>
+            <span>Shake up</span>
+            <strong>Goodness</strong>
+          </h1>
+          <p className="hero-new-description" data-hero-reveal>
+            Creamy. Dreamy. Delicious.<br />
+            Every sip is a perfect blend of happiness and flavour.
+          </p>
+          <div className="hero-actions hero-new-actions" data-hero-reveal>
             <a className="button primary" href="#menu">
-              Order Now
-              <ArrowRight size={16} />
-            </a>
-            <a className="button secondary" href="#menu">
-              Explore flavours
+              Explore menu
+              <ArrowRight size={17} />
             </a>
           </div>
         </div>
 
-        <div className="hero-visual" aria-label={`Featured ${activeFlavour.name} milkshake`}>
-          <div className="hero-orbit">
-            {flavours.map((flavour, index) => {
-              const position = getOrbitPosition(index);
-              return (
-                <button
-                  key={flavour.id}
-                  type="button"
-                  className={`orbit-shake orbit-${position}`}
-                  onClick={() => goToIndex(index)}
-                  aria-label={`Show ${flavour.name}`}
-                  aria-current={index === activeIndex ? 'true' : undefined}
-                >
-                  {flavour.video && !flavour.videoBackground && index === activeIndex ? (
-                    <video
-                      key={`${flavour.id}-${activeIndex}`}
-                      ref={imageRef}
-                      className="hero-image hero-shake-video"
-                      src={flavour.video}
-                      poster={flavour.image}
-                      autoPlay
-                      muted
-                      playsInline
-                      preload="auto"
-                      aria-label={`${flavour.name} milkshake transformation`}
-                    />
-                  ) : (
-                    <img
-                      ref={index === activeIndex ? imageRef : null}
-                      className="hero-image"
-                      src={flavour.image}
-                      alt={index === activeIndex ? flavour.name : ''}
-                    />
-                  )}
-                  <span>{flavour.name}</span>
-                </button>
-              );
-            })}
+        <div className="hero-product-stage" data-hero-reveal>
+          <div className="hero-product-glow" />
+
+          <svg className="hero-orbits hero-orbits-back" viewBox="0 0 600 700" aria-hidden="true">
+            <ellipse className="hero-orbit-path orbit-orange" cx="300" cy="355" rx="245" ry="185" />
+            <ellipse className="hero-orbit-path orbit-dashed" cx="300" cy="355" rx="272" ry="285" transform="rotate(-19 300 355)" />
+            <circle cx="73" cy="270" r="9" className="orbit-dot-orange" />
+            <circle cx="526" cy="466" r="11" className="orbit-dot-orange" />
+          </svg>
+
+          {reducedMotion || !videoAvailable ? (
+            <img
+              className="hero-product-video hero-product-poster"
+              src={POSTER_PATH}
+              alt="The Shakerz premium milkshake"
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              className="hero-product-video"
+              muted
+              playsInline
+              preload="metadata"
+              poster={POSTER_PATH}
+              aria-hidden="true"
+              onCanPlay={() => {
+                if (playbackRequestedRef.current && videoRef.current?.paused) {
+                  playVideo(true);
+                }
+              }}
+              onEnded={handleVideoEnded}
+              onError={() => setVideoAvailable(false)}
+            >
+              <source src={VIDEO_PATH} type="video/mp4" />
+              <source src={VIDEO_FALLBACK_PATH} type="video/mp4" />
+            </video>
+          )}
+
+          <div className="hero-product-badge badge-quality">
+            <Sparkles size={21} />
+            <span>Premium<br />quality</span>
           </div>
-          <div className="orbit-shadow" aria-hidden="true" />
-          <button
-            type="button"
-            className="orbit-hit-area orbit-hit-left"
-            onClick={() => shiftFlavour('prev')}
-            aria-label="Previous flavour"
-          />
-          <button
-            type="button"
-            className="orbit-hit-area orbit-hit-right"
-            onClick={() => shiftFlavour('next')}
-            aria-label="Next flavour"
-          />
+          <div className="hero-product-badge badge-natural">
+            <Leaf size={21} />
+            <span>Natural<br />ingredients</span>
+          </div>
+          <div className="hero-product-badge badge-love">
+            <Heart size={21} />
+            <span>Made<br />with love</span>
+          </div>
         </div>
+
+        <aside className="hero-benefits" data-hero-reveal>
+          <h2><span>Good mood</span>In every sip</h2>
+          <i />
+          <ul>
+            {benefits.map(({ label, Icon }) => (
+              <li key={label}>
+                <Icon size={24} strokeWidth={1.7} />
+                <span>{label}</span>
+              </li>
+            ))}
+          </ul>
+        </aside>
       </div>
 
-      <div className="hero-wave" aria-hidden="true">
-        <svg viewBox="0 0 1440 240" preserveAspectRatio="none">
-          <path d="M0,98 C105,18 190,20 280,102 C370,183 466,192 548,74 C625,-36 731,-9 808,98 C886,206 1004,187 1085,77 C1164,-30 1264,12 1335,93 C1375,138 1411,136 1440,108 L1440,240 L0,240 Z" />
-        </svg>
-      </div>
+      <SectionWave
+        position="bottom"
+        fill="#FFFAF0"
+        variant="heroMenu"
+        className="hero-wave hero-menu-wave"
+      />
 
       <div className="hero-bottom">
         <div className="hero-rating">
-          <span className="rating-avatars" aria-hidden="true">
-            <i>J</i><i>M</i><i>A</i>
-          </span>
+          <span className="rating-avatars" aria-hidden="true"><i>J</i><i>M</i><i>A</i></span>
           <span><strong>4.9/5</strong> · Happy shake lovers</span>
         </div>
-
-        <span className="price-pill">From {activeFlavour.price}</span>
-
+        <span className="price-pill">{activeFlavour.name} · From {activeFlavour.price}</span>
         <div className="hero-nav">
           <div className="hero-controls" aria-label="Flavour controls">
-            <button type="button" onClick={() => shiftFlavour('prev')} aria-label="Previous flavour">
-              <ChevronLeft size={18} />
-            </button>
-            <button type="button" onClick={() => shiftFlavour('next')} aria-label="Next flavour">
-              <ChevronRight size={18} />
-            </button>
+            <button type="button" onClick={() => shiftFlavour('prev')} aria-label="Previous flavour"><ChevronLeft size={18} /></button>
+            <button type="button" onClick={() => shiftFlavour('next')} aria-label="Next flavour"><ChevronRight size={18} /></button>
           </div>
           <div className="hero-pagination" aria-label="Choose a flavour">
             {flavours.map((flavour, index) => (
@@ -272,8 +363,8 @@ function FlavourHero({ flavours }) {
                 key={flavour.id}
                 type="button"
                 className={index === activeIndex ? 'active' : ''}
-                onClick={() => goToIndex(index)}
-                aria-label={`Show ${flavour.name}`}
+                onClick={() => setActiveIndex(index)}
+                aria-label={`Select ${flavour.name}`}
               />
             ))}
           </div>
